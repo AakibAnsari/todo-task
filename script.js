@@ -1,8 +1,7 @@
 var form = document.getElementById('addform');
 var todoitem = document.getElementById('list');
 var list1 = document.getElementById('list-1');
-// var todoname = document.getElementById('todoname');
-// var tododesc = document.getElementById('tododesc');
+const apiUrl = 'https://crudcrud.com/api/07c1839fd3cf412283d8e6a8b7944dd0/users';
 
 function savetocrud(event){
     event.preventDefault();
@@ -14,7 +13,7 @@ function savetocrud(event){
         tododesc: tododesc,
         completed: "False"
     };
-    axios.post("https://crudcrud.com/api/a9e40e581ba94288bd0f33eeb7a79481/users",myobj)
+    axios.post(apiUrl,myobj)
     .then((res)=> {
         show(res.data);
         console.log(res);
@@ -30,14 +29,19 @@ function show(myobj){
     deleteButton.value='Delete';
     deleteButton.className='btn btn-danger';
     deleteButton.onclick= () => {
-        axios.delete(`https://crudcrud.com/api/a9e40e581ba94288bd0f33eeb7a79481/users/${myobj._id}`);
-        todoitem.removeChild(li);
+        axios.delete(`${apiUrl}/${myobj._id}`);
+        if(myobj.completed=="True"){
+            list1.removeChild(li);
+        } else {
+            todoitem.removeChild(li);
+        }
+        // todoitem.removeChild(li);
     }
     const checkButton = document.createElement('input');
     checkButton.type='checkbox';
     checkButton.value='complete';
     checkButton.onclick= () => {
-        axios.put(`https://crudcrud.com/api/a9e40e581ba94288bd0f33eeb7a79481/users/${myobj._id}`,{
+        axios.put(`${apiUrl}/${myobj._id}`,{
             "todoname": `${myobj.todoname}`,
             "tododesc": `${myobj.tododesc}`,
             "completed": "True"
@@ -46,11 +50,15 @@ function show(myobj){
     }
     li.appendChild(checkButton);
     li.appendChild(deleteButton);
-    todoitem.appendChild(li);
+    if(myobj.completed=="True"){
+        list1.appendChild(li);
+    } else {
+        todoitem.appendChild(li);
+    }
 }
 
 function displayitem(){
-    axios.get('https://crudcrud.com/api/a9e40e581ba94288bd0f33eeb7a79481/users')
+    axios.get(apiUrl)
 .then((res) => {
     for (var i = 0; i < res.data.length; i++ ){
         show(res.data[i]); 
