@@ -51,6 +51,7 @@ function show(myobj){
     li.appendChild(checkButton);
     li.appendChild(deleteButton);
     if(myobj.completed=="True"){
+        checkButton.checked=true;
         list1.appendChild(li);
     } else {
         todoitem.appendChild(li);
